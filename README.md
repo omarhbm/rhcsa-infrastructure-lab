@@ -46,3 +46,16 @@ The infrastructure was tested to verify:
 ## Project Outcome
 
 Successfully deployed and validated a segmented RHEL 9 infrastructure lab demonstrating practical RHCSA-level Linux administration skills and additional exposure to containerized application deployment.
+
+## Network Architecture
+
+```mermaid
+flowchart TD
+    PC["Windows Workstation"] --> GW["gateway01 - Routing, NAT, Firewalld"]
+    GW --> DMZ["DMZ - 192.168.10.0/24"]
+    GW --> LAN["Internal LAN - 192.168.20.0/24"]
+    DMZ --> WEB["web01 - Apache and AutoFS"]
+    LAN --> APP["app01 - Docker, FastAPI, NFS"]
+    WEB -->|"HTTP API - TCP 8000"| APP
+    WEB -->|"NFS via AutoFS"| APP
+```
