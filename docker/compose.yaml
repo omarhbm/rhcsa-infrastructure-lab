@@ -1,0 +1,8 @@
+
+services:
+  infra-api:
+    build: .
+    container_name: infra-api
+    restart: unless-stopped
+    ports:
+      - "192.168.20.10:8000:8000"
