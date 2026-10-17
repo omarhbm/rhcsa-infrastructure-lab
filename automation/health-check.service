@@ -1,0 +1,9 @@
+
+[Unit]
+Description=Infrastructure Health Check
+
+[Service]
+Type=oneshot
+ExecStart=/usr/local/bin/health-check.sh
+StandardOutput=append:/var/log/health-check-timer.log
+StandardError=append:/var/log/health-check-timer.log
