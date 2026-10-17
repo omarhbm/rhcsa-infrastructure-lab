@@ -1,10 +1,11 @@
+
 # LVM & XFS Storage Management
 
 ## Overview
 
-This lab demonstrates Logical Volume Manager (LVM) configuration on RHEL 9 using a dedicated virtual disk.
+This lab demonstrates Logical Volume Manager (LVM) configuration and online storage expansion on RHEL 9 using a dedicated virtual disk.
 
-The storage configuration includes a physical volume, volume group, logical volume, XFS filesystem, and persistent filesystem mount.
+The configuration includes a physical volume, volume group, logical volume, XFS filesystem, persistent mount, and filesystem expansion without unmounting.
 
 ## Storage Architecture
 
@@ -14,11 +15,11 @@ The storage configuration includes a physical volume, volume group, logical volu
 | Physical Volume | /dev/nvme0n1 |
 | Volume Group | datavg |
 | Logical Volume | datalv |
-| Logical Volume Size | 6 GiB |
+| Initial Logical Volume Size | 6 GiB |
+| Current Logical Volume Size | 8 GiB |
 | Filesystem | XFS |
 | Mount Point | /data |
 | Volume Group Size | Approximately 10 GiB |
-| Free Space | Approximately 4 GiB |
 | Physical Extent Size | 4 MiB |
 
 ## LVM Layout
@@ -32,7 +33,7 @@ Physical Volume (PV)
     v
 Volume Group: datavg (~10 GiB)
     |
-    +-- Logical Volume: datalv (6 GiB)
+    +-- Logical Volume: datalv (8 GiB)
     |       |
     |       v
     |    XFS Filesystem
@@ -40,7 +41,7 @@ Volume Group: datavg (~10 GiB)
     |       v
     |     /data
     |
-    +-- Free Space (~4 GiB)
+    +-- Remaining Free Space (~2 GiB)
 ```
 
 ## Persistent Mount Configuration
@@ -51,35 +52,57 @@ The following entry is configured in `/etc/fstab`:
 /dev/datavg/datalv  /data  xfs  defaults  0 0
 ```
 
-This configures the filesystem to be mounted automatically during system startup.
+This configures the filesystem to mount automatically during system startup.
 
-## Verification
+## Initial LVM Configuration
 
-### Logical Volumes
+Before expansion, the logical volume was 6 GiB.
 
-The `lvs` command confirmed the following logical volume:
+Initial verification:
 
 ```text
 LV      VG       LSize
 datalv  datavg   6.00g
 ```
 
-### Volume Group
+The volume group originally had approximately 4 GiB of available space.
 
-The `vgdisplay datavg` command confirmed:
+## Logical Volume Expansion
 
-```text
-VG Name: datavg
-VG Status: resizable
-PE Size: 4.00 MiB
-Total PE: 2559
-Allocated PE: 1536
-Free PE: 1023
+The `datalv` logical volume was expanded from 6 GiB to 8 GiB.
+
+### Step 1: Expand the Logical Volume
+
+```bash
+lvextend -L 8G /dev/datavg/datalv
 ```
 
-### Filesystem Mount
+### Step 2: Grow the XFS Filesystem
 
-The `findmnt /data` command confirmed:
+```bash
+xfs_growfs /data
+```
+
+XFS supports online filesystem growth, allowing the mounted `/data` filesystem to be expanded without unmounting it.
+
+### Step 3: Verify the New Size
+
+```bash
+df -h /data
+```
+
+Verified output:
+
+```text
+Filesystem                 Size  Used Avail Use% Mounted on
+/dev/mapper/datavg-datalv  8.0G   90M  7.9G   2% /data
+```
+
+The output confirms that the mounted filesystem now has a total size of 8.0 GiB.
+
+## Filesystem Verification
+
+The filesystem was verified as XFS and mounted at `/data`.
 
 ```text
 TARGET  SOURCE                    FSTYPE
@@ -95,6 +118,7 @@ vgs
 lvs
 vgdisplay datavg
 findmnt /data
+df -h /data
 grep '/data' /etc/fstab
 ```
 
@@ -103,12 +127,14 @@ grep '/data' /etc/fstab
 - Physical Volume management
 - Volume Group management
 - Logical Volume configuration
-- XFS filesystem management
-- Persistent filesystem mount configuration
-- LVM storage inspection and troubleshooting
+- Online Logical Volume expansion
+- XFS filesystem growth
+- Persistent filesystem mounting
+- LVM capacity management
+- Storage verification and troubleshooting
 
 ## Notes
 
-The logical volume is currently 6 GiB, with approximately 4 GiB of free space remaining in the volume group.
+The logical volume was successfully expanded from 6 GiB to 8 GiB, and the XFS filesystem was grown to use the additional capacity.
 
-Logical volume expansion is not documented as completed in this verification.
+The expansion was performed on the dedicated data volume without modifying the root or swap logical volumes.
