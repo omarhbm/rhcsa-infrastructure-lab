@@ -1,0 +1,11 @@
+
+[Unit]
+Description=Run Infrastructure Health Check Every 30 Minutes
+
+[Timer]
+OnBootSec=5min
+OnUnitActiveSec=30min
+Unit=health-check.service
+
+[Install]
+WantedBy=timers.target
