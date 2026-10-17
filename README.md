@@ -50,9 +50,6 @@ Successfully deployed and validated a segmented RHEL 9 infrastructure lab demons
 
 ## Project Screenshots
 
-### Network Topology
-![Network Topology](screenshots/01-network-topology.png)
-
 ### Web Server
 ![Apache Web Server](screenshots/03-web-server.png)
 
