@@ -70,15 +70,14 @@ Successfully deployed and validated a segmented RHEL 9 infrastructure lab demons
 - [NFS & AutoFS](storage/)
 
 
+
 ## Network Architecture
 
 ```mermaid
 flowchart TD
-    PC["Windows Workstation"] --> GW["gateway01 - Routing, NAT, Firewalld"]
-    GW --> DMZ["DMZ - 192.168.10.0/24"]
-    GW --> LAN["Internal LAN - 192.168.20.0/24"]
-    DMZ --> WEB["web01 - Apache and AutoFS"]
-    LAN --> APP["app01 - Docker, FastAPI, NFS"]
-    WEB -->|"HTTP API - TCP 8000"| APP
-    WEB -->|"NFS via AutoFS"| APP
+    PC["Windows Workstation"] -->|"TCP 8080"| GW["gateway01 - Firewalld / NAT"]
+    GW -->|"Port Forward TCP 80"| WEB["web01 - DMZ / Apache"]
+    WEB -->|"TCP 8000 via gateway01"| APP["app01 - Internal LAN / Docker + FastAPI"]
+    WEB -.->|"NFS TCP 2049 via gateway01"| APP
 ```
+
