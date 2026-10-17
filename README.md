@@ -47,6 +47,29 @@ The infrastructure was tested to verify:
 
 Successfully deployed and validated a segmented RHEL 9 infrastructure lab demonstrating practical RHCSA-level Linux administration skills and additional exposure to containerized application deployment.
 
+
+## Project Screenshots
+
+### Network Topology
+![Network Topology](screenshots/01-network-topology.png)
+
+### Web Server
+![Apache Web Server](screenshots/03-web-server.png)
+
+### API Health Check
+![API Health Check](screenshots/04-api-health.png)
+
+### Docker Container
+![Docker Service](screenshots/05-docker-service.png)
+
+## Configuration Files
+
+- [Docker & FastAPI](docker/)
+- [Apache Reverse Proxy](apache/)
+- [Network Configuration](network/)
+- [NFS & AutoFS](storage/)
+
+
 ## Network Architecture
 
 ```mermaid
