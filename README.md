@@ -59,12 +59,16 @@ Successfully deployed and validated a segmented RHEL 9 infrastructure lab demons
 ### Docker Container
 ![Docker Service](screenshots/05-docker-service.png)
 
+
 ## Configuration Files
 
 - [Docker & FastAPI](docker/)
 - [Apache Reverse Proxy](apache/)
 - [Network Configuration](network/)
 - [NFS & AutoFS](storage/)
+- [SELinux Security](security/)
+- [System Automation](automation/)
+
 
 
 
