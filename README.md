@@ -68,6 +68,7 @@ Successfully deployed and validated a segmented RHEL 9 infrastructure lab demons
 - [NFS & AutoFS](storage/)
 - [SELinux Security](security/)
 - [System Automation](automation/)
+- [DNF Repository Management](packages/)
 
 
 
